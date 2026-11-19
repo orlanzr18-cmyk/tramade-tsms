@@ -1,0 +1,426 @@
+﻿<UserControl x:Class="TRAMADE.wndEmitirFactura"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#f5f0eb"
+             Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background"   Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding"      Value="14"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="2"
+                                      Color="#c8b89a" Opacity="0.15" Direction="270"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LblCampo" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Poppins"/>
+            <Setter Property="FontSize"   Value="10"/>
+            <Setter Property="Foreground" Value="#8a6a4a"/>
+        </Style>
+
+        <Style x:Key="LblValor" TargetType="TextBlock">
+            <Setter Property="FontFamily"           Value="Poppins"/>
+            <Setter Property="FontSize"             Value="11"/>
+            <Setter Property="Foreground"           Value="#3d2b1f"/>
+            <Setter Property="TextAlignment"        Value="Center"/>
+            <Setter Property="VerticalAlignment"    Value="Center"/>
+        </Style>
+
+        <Style x:Key="CampoValor" TargetType="Border">
+            <Setter Property="Background"    Value="#f5f3f0"/>
+            <Setter Property="CornerRadius"  Value="5"/>
+            <Setter Property="Padding"       Value="8,5"/>
+            <Setter Property="MinHeight"     Value="28"/>
+        </Style>
+
+        <Style x:Key="BtnImprimir" TargetType="Button">
+            <Setter Property="Background"      Value="#82090e"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="FontWeight"      Value="Medium"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="20,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}"
+                                CornerRadius="10" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#a01015"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DgHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background"      Value="#8a5c35"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Padding"         Value="12,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="DgCellStyle" TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding"         Value="12,6"/>
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="11"/>
+            <Setter Property="Foreground"      Value="#3d2b1f"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <!-- Barra superior marrón -->
+            <RowDefinition Height="*"/>
+            <!-- Contenido -->
+            <RowDefinition Height="40"/>
+            <!-- Pie de página -->
+        </Grid.RowDefinitions>
+
+        <!-- ══════════════════════════════════════
+             BARRA SUPERIOR
+        ══════════════════════════════════════ -->
+        <Border Grid.Row="0" Background="#8a5c35">
+            <Grid Margin="16,0,16,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Módulo de facturación"
+                               FontFamily="Poppins" FontSize="16" FontWeight="Bold"
+                               Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text="     (Emitir factura)"
+                               FontFamily="Poppins" FontSize="16"
+                               Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button x:Name="btnDescargarPDF"
+                        HorizontalAlignment="Right"
+                        Content="🖨 Imprimir"
+                        Style="{StaticResource BtnImprimir}"
+                        Click="btnDescargarPDF_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- ══════════════════════════════════════
+             CONTENIDO PRINCIPAL
+        ══════════════════════════════════════ -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Background="#f5f0eb">
+            <Grid Margin="16,14,16,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Número factura -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Cliente + Vendedor -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Card detalles -->
+                </Grid.RowDefinitions>
+
+                <!-- ── Número de factura ── -->
+                <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Número de factura:"
+                                   FontFamily="Poppins" FontSize="11"
+                                   Foreground="#8a6a4a" VerticalAlignment="Center"
+                                   Margin="0,0,12,0"/>
+                        <TextBlock x:Name="lblNumeroFacturaEF"
+                                   Grid.Column="1"
+                                   Text="INV/2026/0001"
+                                   FontFamily="Poppins" FontSize="22" FontWeight="Bold"
+                                   Foreground="#3d2b1f"/>
+                    </Grid>
+                </Border>
+
+                <!-- ── Cliente + Vendedor ── -->
+                <Grid Grid.Row="1" Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Cliente -->
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Datos del cliente:"
+                                       FontFamily="Poppins" FontSize="11"
+                                       Foreground="#8a6a4a" Margin="0,0,0,10"/>
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="DNI/RTN:" Style="{StaticResource LblCampo}"
+                                           VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Style="{StaticResource CampoValor}">
+                                    <TextBlock x:Name="txtDNIClienteEF" Style="{StaticResource LblValor}"/>
+                                </Border>
+                            </Grid>
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Cliente:" Style="{StaticResource LblCampo}"
+                                           VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Style="{StaticResource CampoValor}">
+                                    <TextBlock x:Name="txtNombreClienteEF" Style="{StaticResource LblValor}"/>
+                                </Border>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Dirección:" Style="{StaticResource LblCampo}"
+                                           VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Style="{StaticResource CampoValor}">
+                                    <TextBlock x:Name="txtDireccionClienteEF" Style="{StaticResource LblValor}"
+                                               TextWrapping="Wrap"/>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Vendedor -->
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Datos del vendedor:"
+                                       FontFamily="Poppins" FontSize="11"
+                                       Foreground="#8a6a4a" Margin="0,0,0,10"/>
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="90"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="ID de vendedor:" Style="{StaticResource LblCampo}"
+                                           VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Style="{StaticResource CampoValor}">
+                                    <TextBlock x:Name="txtIDVendedorEF" Style="{StaticResource LblValor}"/>
+                                </Border>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="90"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Nombre:" Style="{StaticResource LblCampo}"
+                                           VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Style="{StaticResource CampoValor}">
+                                    <TextBlock x:Name="txtNombreVendedorEF" Style="{StaticResource LblValor}"/>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ── Card: Detalles de compra ── -->
+                <Border Grid.Row="2" Style="{StaticResource CardStyle}">
+                    <StackPanel>
+
+                        <!-- Encabezado -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0"
+                                       Text="Detalles de compra"
+                                       FontFamily="Poppins" FontSize="15" FontWeight="Bold"
+                                       Foreground="#3d2b1f" VerticalAlignment="Center"/>
+
+                            <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="Emisión:"
+                                           FontFamily="Poppins" FontSize="10"
+                                           Foreground="#8a6a4a" Margin="0,0,6,0"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock x:Name="lblFechaEmisionEF"
+                                           FontFamily="Poppins" FontSize="11"
+                                           Foreground="#3d2b1f" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="4" Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="Vencimiento:"
+                                           FontFamily="Poppins" FontSize="10"
+                                           Foreground="#8a6a4a" Margin="0,0,6,0"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock x:Name="lblFechaVencimientoEF"
+                                           FontFamily="Poppins" FontSize="11"
+                                           Foreground="#3d2b1f" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Background="#e0d4c4" Height="1" Margin="0,0,0,10"/>
+
+                        <!-- DataGrid -->
+                        <DataGrid x:Name="dgvEmitirFactura"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  CanUserSortColumns="False"
+                                  HeadersVisibility="Column"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#f0e8de"
+                                  Background="White"
+                                  RowBackground="White"
+                                  AlternatingRowBackground="#fdf9f5"
+                                  BorderThickness="0"
+                                  RowHeaderWidth="0"
+                                  SelectionMode="Single"
+                                  MinHeight="120"
+                                  MaxHeight="200"
+                                  Margin="0,0,0,14"
+                                  ColumnHeaderStyle="{StaticResource DgHeaderStyle}"
+                                  CellStyle="{StaticResource DgCellStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Producto"
+                                                    Binding="{Binding Producto}"
+                                                    Width="2*"/>
+                                <DataGridTextColumn Header="Descripción"
+                                                    Binding="{Binding Descripcion}"
+                                                    Width="1.5*"/>
+                                <DataGridTextColumn Header="Cantidad"
+                                                    Binding="{Binding Cantidad}"
+                                                    Width="*"/>
+                                <DataGridTextColumn Header="Precio unitario"
+                                                    Binding="{Binding PrecioUnitario}"
+                                                    Width="*"/>
+                                <DataGridTextColumn Header="Subtotal"
+                                                    Binding="{Binding Subtotal}"
+                                                    Width="*"/>
+                            </DataGrid.Columns>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#fef4e6"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#fdf5ea"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+
+                        <Border Background="#e0d4c4" Height="1" Margin="0,0,0,14"/>
+
+                        <!-- Totales + Forma de pago -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Totales -->
+                            <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="Subtotal:"
+                                               FontFamily="Poppins" FontSize="11"
+                                               Foreground="#8a6a4a"/>
+                                    <TextBlock x:Name="lblSubtotalEF" Text="L. 0.00"
+                                               FontFamily="Poppins" FontSize="11"
+                                               Foreground="#2e7d52"
+                                               HorizontalAlignment="Left" Margin="100,0,0,0"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="Impuesto 15%:"
+                                               FontFamily="Poppins" FontSize="11"
+                                               Foreground="#8a6a4a"/>
+                                    <TextBlock x:Name="lblImpuestoEF" Text="L. 0.00"
+                                               FontFamily="Poppins" FontSize="11"
+                                               Foreground="#2e7d52"
+                                               HorizontalAlignment="Left" Margin="100,0,0,0"/>
+                                </Grid>
+                                <Border Background="#e0d4c4" Height="1" Margin="0,4,200,4"/>
+                                <Grid>
+                                    <TextBlock Text="Total a pagar:"
+                                               FontFamily="Poppins" FontSize="13"
+                                               FontWeight="Bold" Foreground="#3d2b1f"/>
+                                    <TextBlock x:Name="lblTotalEF" Text="L. 0.00"
+                                               FontFamily="Poppins" FontSize="13"
+                                               FontWeight="Bold" Foreground="#3d2b1f"
+                                               HorizontalAlignment="Left" Margin="100,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Forma de pago -->
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="Forma de pago:"
+                                           FontFamily="Poppins" FontSize="11" FontWeight="SemiBold"
+                                           Foreground="#8a6a4a" Margin="0,0,0,8"/>
+                                <RadioButton x:Name="rbContadoEF" Content="Contado"
+                                             FontFamily="Poppins" FontSize="11"
+                                             Foreground="#3d2b1f" IsEnabled="False"
+                                             Margin="0,0,0,6"/>
+                                <RadioButton x:Name="rbCreditoEF" Content="Crédito"
+                                             FontFamily="Poppins" FontSize="11"
+                                             Foreground="#3d2b1f" IsEnabled="False"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+
+        <!-- ══════════════════════════════════════
+             PIE DE PÁGINA
+        ══════════════════════════════════════ -->
+        <Border Grid.Row="2" Background="White">
+            <TextBlock Text="¡MUCHAS GRACIAS POR SU COMPRA!"
+                       FontFamily="Poppins" FontSize="11" FontWeight="Bold"
+                       Foreground="#8a5c35"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Border>
+
+    </Grid>
+</UserControl>

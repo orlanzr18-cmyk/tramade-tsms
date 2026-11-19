@@ -1,0 +1,307 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="TRAMADE.FormulariosAdministrador.wndAgregarUsuarioBiometrico"
+             Background="#8c6c47"
+             d:DesignWidth="720" d:DesignHeight="500">
+
+    <UserControl.Resources>
+
+        <Style x:Key="CardStyle" TargetType="{x:Type Border}">
+            <Setter Property="Background"   Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding"      Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2"
+                                      Color="#c8b89a" Opacity="0.2" Direction="270"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LblCampo" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontFamily" Value="Poppins"/>
+            <Setter Property="FontSize"   Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#5a3e2b"/>
+            <Setter Property="Margin"     Value="0,0,0,5"/>
+        </Style>
+
+        <Style x:Key="ComboEstilo" TargetType="{x:Type ComboBox}">
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Foreground"      Value="#3d2b1f"/>
+            <Setter Property="Background"      Value="#fafafa"/>
+            <Setter Property="BorderBrush"     Value="#ddd"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"          Value="38"/>
+            <Setter Property="Margin"          Value="0,0,0,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="32"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  Margin="12,0,0,0"
+                                                  VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0"
+                                           x:Name="Placeholder"
+                                           Text="{TemplateBinding Tag}"
+                                           FontFamily="Poppins" FontSize="12"
+                                           Foreground="#aaa" Margin="12,0,0,0"
+                                           VerticalAlignment="Center"
+                                           IsHitTestVisible="False"
+                                           Visibility="Collapsed"/>
+                                <Path Grid.Column="1"
+                                      Data="M0,0 L4,4 L8,0"
+                                      Stroke="#8a5c35" StrokeThickness="1.5"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                                <ToggleButton Grid.ColumnSpan="2" Opacity="0"
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay,
+                                                          RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                <Popup Grid.ColumnSpan="2"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       Placement="Bottom" AllowsTransparency="True">
+                                    <Border Background="White" BorderBrush="#ddd"
+                                            BorderThickness="1" CornerRadius="8" Padding="4"
+                                            MinWidth="{Binding ActualWidth,
+                                                       RelativeSource={RelativeSource AncestorType=ComboBox}}">
+                                        <ScrollViewer MaxHeight="200">
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="SelectedIndex" Value="-1">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Root" Property="BorderBrush"     Value="#8a5c35"/>
+                                <Setter TargetName="Root" Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BtnAzul" TargetType="{x:Type Button}">
+            <Setter Property="Background"      Value="#0f2c83"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Height"          Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#1a48d0"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#091a5c"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Root" Property="Background" Value="#c0c8e0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BtnVerde" TargetType="{x:Type Button}">
+            <Setter Property="Background"      Value="#23891a"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Height"          Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#2db822"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#176011"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Root" Property="Background" Value="#a8d4a5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Margin="16,14,16,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Título -->
+        <TextBlock Grid.Row="0"
+                   Text="AGREGAR USUARIOS A BIOMÉTRICO"
+                   FontFamily="Poppins" FontSize="20" FontWeight="Bold"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,14"/>
+
+        <!-- Card principal -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="220"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ══ IZQUIERDA — Cámara ══ -->
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Feed de cámara -->
+                    <Border Grid.Row="0"
+                            Background="#2a2a2a"
+                            CornerRadius="10"
+                            ClipToBounds="True">
+                        <Image x:Name="imgCamara"
+                               Stretch="Uniform"/>
+                    </Border>
+
+                    <!-- Estado -->
+                    <Border Grid.Row="1"
+                            Background="#f5f3f0"
+                            CornerRadius="8"
+                            Padding="12,8"
+                            Margin="0,10,0,0">
+                        <TextBlock x:Name="lblEstado"
+                                   Text="Seleccione un usuario para comenzar"
+                                   FontFamily="Poppins" FontSize="11"
+                                   Foreground="#8a5c35"
+                                   HorizontalAlignment="Center"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+                </Grid>
+
+                <!-- ══ DERECHA — Controles ══ -->
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Usuario -->
+                    <TextBlock Grid.Row="0"
+                               Text="Seleccione el usuario"
+                               Style="{StaticResource LblCampo}"/>
+                    <ComboBox Grid.Row="1"
+                              x:Name="cmbUsuarios"
+                              Style="{StaticResource ComboEstilo}"
+                              Tag="Buscar usuario..."
+                              SelectionChanged="cmbUsuarios_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding [nombre_usuario]}"
+                                           FontFamily="Poppins" FontSize="12"
+                                           Foreground="#3d2b1f" Padding="4,2"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <!-- Cámara -->
+                    <TextBlock Grid.Row="2"
+                               Text="Cámara"
+                               Style="{StaticResource LblCampo}"/>
+                    <ComboBox Grid.Row="3"
+                              x:Name="cmbCamaras"
+                              Style="{StaticResource ComboEstilo}"
+                              Tag="Seleccione cámara..."
+                              SelectionChanged="cmbCamaras_SelectionChanged"/>
+
+                    <!-- Separador -->
+                    <Border Grid.Row="4"
+                            Background="#e0d4c4" Height="1"
+                            Margin="0,4,0,16"/>
+
+                    <!-- Progreso -->
+                    <StackPanel Grid.Row="5" Margin="0,0,0,12">
+                        <TextBlock x:Name="lblProgreso"
+                                   Text="Fotos: 0 / 20"
+                                   FontFamily="Poppins" FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="#5a3e2b"
+                                   Margin="0,0,0,6"/>
+                        <ProgressBar x:Name="pbProgreso"
+                                     Minimum="0" Maximum="20" Value="0"
+                                     Height="10"
+                                     Foreground="#23891a"
+                                     Background="#e0e0e0"/>
+                    </StackPanel>
+
+                    <!-- Espaciador -->
+                    <Grid Grid.Row="6"/>
+
+                    <!-- Botones — Spacing="8" no existe en .NET 4.7.2, 
+                         se reemplaza con Margin en cada botón -->
+                    <StackPanel Grid.Row="7">
+                        <Button x:Name="btnCapturar"
+                                Content="📷  Capturar"
+                                Style="{StaticResource BtnAzul}"
+                                IsEnabled="False"
+                                Margin="0,0,0,8"
+                                Click="btnCapturar_Click"/>
+                        <Button x:Name="btnGuardar"
+                                Content="💾  Guardar"
+                                Style="{StaticResource BtnVerde}"
+                                IsEnabled="False"
+                                Click="btnGuardar_Click"/>
+                    </StackPanel>
+
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

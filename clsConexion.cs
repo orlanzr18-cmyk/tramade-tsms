@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace TRAMADE
+{
+    internal class clsConexion
+    {
+        /*string conexion = "Data Source=db-tramade.database.windows.net;" +
+                          "Initial Catalog=DB_TRAMADE;" +
+                          "User ID=TMSS;" +
+                          "Password=Elmaster8;" +
+                          "Connect Timeout=30;";*/
+
+        string conexion = "Data Source=DB_TRAMADE.mssql.somee.com;" +
+                          "Initial Catalog=DB_TRAMADE;" +
+                          "User ID=TRAMADE;" +
+                          "Password=Elmaster8;" +
+                          "Connect Timeout=30;";
+
+        public SqlConnection SqlC = new SqlConnection();
+        public clsConexion()
+        {
+            SqlC.ConnectionString = conexion;
+        }
+        public void Abrir()
+        {
+            try
+            {
+                if (SqlC.State == ConnectionState.Closed)
+                {
+                    SqlC.Open();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("" + ex, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        public async Task AbrirAsync()
+        {
+            if (SqlC.State == ConnectionState.Closed || SqlC.State == ConnectionState.Broken)
+            {
+                await SqlC.OpenAsync();
+            }
+        }
+
+        public void Cerrar()
+        {
+            try
+            {
+                if (SqlC.State == System.Data.ConnectionState.Open)
+                {
+                    SqlC.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("" + ex, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+    }
+}

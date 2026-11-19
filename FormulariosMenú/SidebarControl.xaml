@@ -1,0 +1,381 @@
+﻿<UserControl x:Class="TRAMADE.SidebarControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="220"
+             Background="#4a3325">
+
+    <UserControl.Resources>
+
+        <!-- Colores del tema -->
+        <SolidColorBrush x:Key="SidebarBg"       Color="#4a3325"/>
+        <SolidColorBrush x:Key="ActiveBg"        Color="#33251a"/>
+        <SolidColorBrush x:Key="HoverBg"         Color="#5c4030"/>
+        <SolidColorBrush x:Key="AccentColor"     Color="#daa564"/>
+        <SolidColorBrush x:Key="TextNormal"      Color="#c4a882"/>
+        <SolidColorBrush x:Key="TextActive"      Color="#daa564"/>
+        <SolidColorBrush x:Key="TextDim"         Color="#8a5a45"/>
+        <SolidColorBrush x:Key="Separator"       Color="#5c4030"/>
+
+        <!-- Animaciones de duración -->
+        <Duration x:Key="AnimDuration">0:0:0.22</Duration>
+
+        <!-- Estilo base para botones de navegación -->
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background"           Value="Transparent"/>
+            <Setter Property="BorderThickness"      Value="0"/>
+            <Setter Property="Cursor"               Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Height"               Value="46"/>
+            <Setter Property="Padding"              Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="Transparent"
+                                BorderThickness="0,0,0,0"
+                                BorderBrush="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#1Affffff"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo para el botón activo (resaltado con línea dorada) -->
+        <Style x:Key="NavButtonActiveStyle" TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="#26daa564"
+                                BorderThickness="3,0,0,0"
+                                BorderBrush="#daa564">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo para botón de cerrar sesión -->
+        <Style x:Key="LogoutButtonStyle" TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="Transparent" BorderThickness="0">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#1Aff4444"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <!-- Contenedor principal con nombre para animar el ancho -->
+    <Border x:Name="SidebarRoot" Background="#4a3325" HorizontalAlignment="Stretch">
+        <DockPanel>
+
+            <Border DockPanel.Dock="Top" Height="56" Background="#3d2b1f">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="56"/>
+                        <!-- fija: siempre 56px -->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnToggle"
+                Grid.Column="0"
+                Width="56" Height="56"
+                Click="btnToggle_Click"
+                ToolTip="Contraer / Expandir menú"
+                Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Vertical"
+                        Width="20" Height="14"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                            <Rectangle Height="2" Fill="#a08060" RadiusX="1" RadiusY="1" Margin="0,0,0,4"/>
+                            <Rectangle Height="2" Fill="#a08060" RadiusX="1" RadiusY="1" Margin="0,0,0,4"/>
+                            <Rectangle Height="2" Fill="#a08060" RadiusX="1" RadiusY="1"/>
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock x:Name="txtBienvenido"
+                   Grid.Column="1"
+                   Text="Bienvenido, Usuario"
+                   Foreground="#e8d5c0"
+                   FontSize="13.5"
+                   FontFamily="Poppins"
+                   VerticalAlignment="Center"
+                   Margin="4,0,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- ── Botón Cerrar Sesión abajo (DockPanel.Dock primero para reservar espacio) ── -->
+            <Border DockPanel.Dock="Bottom">
+                <StackPanel>
+                    <Rectangle Height="1" Fill="#5c4030" Margin="0,4,0,0"/>
+                    <Button x:Name="btnCerrarSesion"
+                            Style="{StaticResource LogoutButtonStyle}"
+                            Click="btnCerrarSesion_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- Icono power -->
+                            <Viewbox Grid.Column="0" Width="18" Height="18">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="#e8d5c0"
+                                          Data="M12 2a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1zm4.22 2.78a1 1 0 0 1 1.42 0A9 9 0 1 1 6.36 4.78a1 1 0 1 1 1.42 1.42 7 7 0 1 0 9.01 0 1 1 0 0 1-.57-1.42z"/>
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock x:Name="txtCerrarSesion"
+                                       Grid.Column="1"
+                                       Text="Cerrar Sesión"
+                                       Foreground="#e8d5c0"
+                                       FontSize="13"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"
+                                       Opacity="1"/>
+                        </Grid>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- ── Menú de navegación (ocupa el resto) ── -->
+            <ScrollViewer DockPanel.Dock="Top"
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="NavPanel">
+
+                    <!-- Inicio -->
+                    <Button x:Name="btnInicio"
+                            Style="{StaticResource NavButtonActiveStyle}"
+                            Tag="Inicio"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="⌂" FontSize="18"
+                                       Foreground="#daa564"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtInicio" Grid.Column="1" Text="Inicio"
+                                       Foreground="#daa564" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Clientes -->
+                    <Button x:Name="btnClientes"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Clientes"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="✦" FontSize="16"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtClientes" Grid.Column="1" Text="Clientes"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Ventas -->
+                    <Button x:Name="btnVentas"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Ventas"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="◈" FontSize="16"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtVentas" Grid.Column="1" Text="Facturación"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Compras -->
+                    <Button x:Name="btnCompras"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Compras"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="⊞" FontSize="16"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtCompras" Grid.Column="1" Text="Compras"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Proveedores -->
+                    <Button x:Name="btnProveedores"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Proveedores"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="⊡" FontSize="16"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtProveedores" Grid.Column="1" Text="Proveedores"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Inventario -->
+                    <Button x:Name="btnInventario"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Inventario"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="≡" FontSize="18"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtInventario" Grid.Column="1" Text="Inventario"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Deudores -->
+                    <Button x:Name="btnDeudores"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Deudores"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="⊕" FontSize="16"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtDeudores" Grid.Column="1" Text="Deudores"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Reportes -->
+                    <Button x:Name="btnReportes"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Reportes"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="📋" FontSize="15"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtReportes" Grid.Column="1" Text="Reportes"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Usuarios -->
+                    <Button x:Name="btnUsuarios"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Usuarios"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="👤" FontSize="15"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtUsuarios" Grid.Column="1" Text="Usuarios"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Bitácora -->
+                    <Button x:Name="btnBitacora"
+                            Style="{StaticResource NavButtonStyle}"
+                            Tag="Bitacora"
+                            Click="NavButton_Click">
+                        <Grid Height="46">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="📝" FontSize="15"
+                                       Foreground="#c4a882"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtBitacora" Grid.Column="1" Text="Bitácora"
+                                       Foreground="#c4a882" FontSize="13.5"
+                                       FontFamily="Poppins"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Button>
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </DockPanel>
+    
+    </Border>
+</UserControl>

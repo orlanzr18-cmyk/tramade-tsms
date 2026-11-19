@@ -1,0 +1,371 @@
+<UserControl x:Class="TRAMADE.FormulariosProveedor.ProveedoresAñadirControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#8a5c35"
+             Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background"   Value="White"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding"      Value="24,20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2"
+                                      Color="#c8b89a" Opacity="0.15" Direction="270"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily"  Value="Poppins"/>
+            <Setter Property="FontSize"    Value="11"/>
+            <Setter Property="FontWeight"  Value="SemiBold"/>
+            <Setter Property="Foreground"  Value="#3d2b1f"/>
+            <Setter Property="Margin"      Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="InputStyle" TargetType="TextBox">
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Height"          Value="38"/>
+            <Setter Property="Padding"         Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background"      Value="#f5f3f0"/>
+            <Setter Property="BorderBrush"     Value="#d0c8be"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground"      Value="#3d2b1f"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#daa564"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── ComboBox estandarizado (ref. RegistrarInvControl) — CORREGIDO ── -->
+        <Style x:Key="ComboStyle" TargetType="ComboBox">
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="Foreground"      Value="#3d2b1f"/>
+            <Setter Property="Background"      Value="#f5f3f0"/>
+            <Setter Property="BorderBrush"     Value="#d0c8be"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height"          Value="38"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border x:Name="Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="6">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="11,0,0,0">
+
+                                    <TextBlock x:Name="Placeholder"
+                                       Text="Seleccionar…"
+                                       FontFamily="Poppins" FontSize="12"
+                                       Foreground="#b89870"
+                                       VerticalAlignment="Center"
+                                       IsHitTestVisible="False"
+                                       Visibility="Collapsed"/>
+
+                                    <ContentPresenter x:Name="ContentSite"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                              VerticalAlignment="Center"
+                                              IsHitTestVisible="False"/>
+                                </Grid>
+                                <TextBlock Grid.Column="1" Text="⌄" FontSize="14"
+                                   Foreground="#8a5c35"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,0,3"
+                                   IsHitTestVisible="False"/>
+                                <Popup x:Name="PART_Popup"
+                               Grid.ColumnSpan="2"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               PopupAnimation="Slide"
+                               Placement="Bottom">
+                                    <Border Background="White"
+                                    BorderBrush="#d0c8be"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    MinWidth="{TemplateBinding ActualWidth}">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="10" ShadowDepth="2"
+                                                      Color="#c8b89a" Opacity="0.2" Direction="270"/>
+                                        </Border.Effect>
+                                        <ScrollViewer MaxHeight="180" VerticalScrollBarVisibility="Auto">
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                                <ToggleButton Grid.ColumnSpan="2" Focusable="False"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay,
+                                                  RelativeSource={RelativeSource TemplatedParent}}"
+                                      Background="Transparent" BorderThickness="0" Opacity="0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver"    Value="True">
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#daa564"/>
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#daa564"/>
+                            </Trigger>
+                            <Trigger Property="SelectedItem"   Value="{x:Null}">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="FontFamily" Value="Poppins"/>
+                        <Setter Property="FontSize"   Value="12"/>
+                        <Setter Property="Foreground" Value="#3d2b1f"/>
+                        <Setter Property="Padding"    Value="11,7"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border x:Name="Bg" Background="Transparent"
+                                    Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bg" Property="Background" Value="#fef4e6"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Bg" Property="Background" Value="#fde8c8"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontFamily"  Value="Poppins"/>
+            <Setter Property="FontSize"    Value="14"/>
+            <Setter Property="FontWeight"  Value="Bold"/>
+            <Setter Property="Foreground"  Value="#3d2b1f"/>
+            <Setter Property="Margin"      Value="0,0,0,14"/>
+        </Style>
+
+        <Style x:Key="Divider" TargetType="Border">
+            <Setter Property="Height"     Value="1"/>
+            <Setter Property="Background" Value="#e0d5c8"/>
+            <Setter Property="Margin"     Value="0,16,0,16"/>
+        </Style>
+
+        <Style x:Key="BtnGuardar" TargetType="Button">
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="Background"      Value="#0f2c83"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="24,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#1340b0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BtnCancelar" TargetType="Button">
+            <Setter Property="FontFamily"      Value="Poppins"/>
+            <Setter Property="FontSize"        Value="12"/>
+            <Setter Property="FontWeight"      Value="SemiBold"/>
+            <Setter Property="Foreground"      Value="#3d2b1f"/>
+            <Setter Property="Background"      Value="#f0ebe5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Padding"         Value="24,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#e0d8ce"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="28,20,28,16">
+            <TextBlock Text="Añadir Proveedor"
+                       FontFamily="Poppins" FontSize="22" FontWeight="Bold"
+                       Foreground="White"/>
+        </StackPanel>
+
+        <!-- CARD CONTENIDO -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}"
+                Margin="12,0,12,12">
+            <StackPanel>
+                <StackPanel>
+
+                    <!-- Información general -->
+                    <TextBlock Text="Información general" Style="{StaticResource SectionTitle}"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="14"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Grid.Row="0">
+                            <TextBlock Text="Razón Social" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox x:Name="cmbRazonSocial" Style="{StaticResource ComboStyle}">
+                                <ComboBoxItem>S.A. de C.V.</ComboBoxItem>
+                                <ComboBoxItem>S. de R.L.</ComboBoxItem>
+                                <ComboBoxItem>S. de R.L. de C.V.</ComboBoxItem>
+                                <ComboBoxItem>Comerciante Individual</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Grid.Row="0">
+                            <TextBlock Text="Dirección Fiscal" Style="{StaticResource LabelStyle}"/>
+                            <TextBox x:Name="txtDireccionFiscal" Style="{StaticResource InputStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="2">
+                            <TextBlock Text="Nombre Comercial" Style="{StaticResource LabelStyle}"/>
+                            <TextBox x:Name="txtNombreComercial" Style="{StaticResource InputStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Grid.Row="2">
+                            <TextBlock Text="RTN" Style="{StaticResource LabelStyle}"/>
+                            <TextBox x:Name="txtRtn" Style="{StaticResource InputStyle}"
+                                     PreviewTextInput="txtRtn_PreviewTextInput"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Style="{StaticResource Divider}"/>
+
+                    <!-- Datos de contacto -->
+                    <TextBlock Text="Datos de contacto" Style="{StaticResource SectionTitle}"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="14"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Grid.Row="0">
+                            <TextBlock Text="Teléfono General" Style="{StaticResource LabelStyle}"/>
+                            <TextBox x:Name="txtTelefonoGeneral" Style="{StaticResource InputStyle}"
+                                     PreviewTextInput="txtTelefono_PreviewTextInput"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Grid.Row="0">
+                            <TextBlock Text="Clasificación" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox x:Name="cmbClasificacion" Style="{StaticResource ComboStyle}"
+                                      DisplayMemberPath="descripcion_clasificacion_proveedor"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="2">
+                            <TextBlock Text="Correo Central" Style="{StaticResource LabelStyle}"/>
+                            <TextBox x:Name="txtCorreoCentral" Style="{StaticResource InputStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Grid.Row="2">
+                            <TextBlock Text="Términos de pago" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox x:Name="cmbTerminosdePago" Style="{StaticResource ComboStyle}"
+                                      DisplayMemberPath="descripcion_terminos_de_pago"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Style="{StaticResource Divider}"/>
+
+                    <!-- BOTONES -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Style="{StaticResource BtnCancelar}" Margin="0,0,10,0"
+                                Click="btnCancelar_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="✕  " VerticalAlignment="Center"/>
+                                <TextBlock Text="CANCELAR" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource BtnGuardar}" Click="btnGuardar_Click">
+                            <TextBlock Text="GUARDAR"/>
+                        </Button>
+                    </StackPanel>
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

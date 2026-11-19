@@ -1,0 +1,240 @@
+<Window x:Class="TRAMADE.FormulariosCompras.ActualizarCompraControl"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        Title=""
+        Width="855" Height="758"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        MinWidth="855" MinHeight="758"
+        Background="#8A5C35"
+        Loaded="UserControl_Loaded">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ComprasStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="74"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="ACTUALIZAR SOLICITUD DE COMPRA"
+                   FontFamily="Poppins" FontSize="18"
+                   FontWeight="SemiBold" Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Margin="0,18,0,0"
+                   Opacity="0.9"/>
+
+        <Border Grid.Row="1"
+                Style="{StaticResource CardStyle}"
+                Margin="28,0,28,18">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="165"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="110"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Numero de compra" Style="{StaticResource FieldLabel}"
+                               VerticalAlignment="Center"/>
+                    <Grid Grid.Column="1">
+                        <TextBox x:Name="TxtIdCompra"
+                                 TextChanged="TxtIdCompra_TextChanged"/>
+                        <Popup x:Name="PopupCompras"
+                               PlacementTarget="{Binding ElementName=TxtIdCompra}"
+                               Placement="Bottom"
+                               Width="{Binding ActualWidth, ElementName=TxtIdCompra}"
+                               StaysOpen="False">
+                            <Border Background="White"
+                                    BorderBrush="#E0D0C0"
+                                    BorderThickness="1.5"
+                                    CornerRadius="8"
+                                    MaxHeight="180">
+                                <ListBox x:Name="LstCompras"
+                                         BorderThickness="0"
+                                         FontFamily="Poppins"
+                                         FontSize="11"
+                                         SelectionChanged="LstCompras_SelectionChanged"/>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <Button Grid.Column="3" Background="#15318E"
+                            Content="Buscar" Click="BtnBuscar_Click"/>
+                </Grid>
+
+                <Border Grid.Row="1" Background="#E0D0C0" Margin="0,14,0,0"/>
+
+                <Grid x:Name="PanelDatosCompra" Grid.Row="2" Margin="4,14,0,14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="14"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="1.15*"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="125"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Proveedor" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" x:Name="CmbProveedor" IsEditable="True"
+                                  Style="{StaticResource FieldCombo}"/>
+                        <TextBlock Grid.Column="3" Text="Fecha de entrega"
+                                   Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center"/>
+                        <DatePicker Grid.Column="4" x:Name="DpEntrega"
+                                    Style="{StaticResource FieldDatePicker}"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="1.15*"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Forma de pago" Style="{StaticResource FieldLabel}"
+                                   VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" x:Name="CmbFormaPago"
+                                  Style="{StaticResource FieldCombo}"/>
+                    </Grid>
+                </Grid>
+
+                <Border Grid.Row="3" Background="#E0D0C0"/>
+
+                <Grid x:Name="PanelAgregarProducto" Grid.Row="4" Margin="4,14,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="165"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="108"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="96"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Seleccione el producto" Style="{StaticResource FieldLabel}"
+                               VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" x:Name="CmbProducto" IsEditable="True"
+                              Style="{StaticResource FieldCombo}"
+                              SelectionChanged="CmbProducto_SelectionChanged"/>
+                    <Button Grid.Column="3" Style="{StaticResource SuccessButton}"
+                            Content="+ Agregar" Height="38" Padding="20,0"
+                            Click="BtnAgregar_Click"/>
+                    <Button Grid.Column="5" Style="{StaticResource DangerButton}"
+                            Content="x Quitar" Height="38" Padding="20,0"
+                            Click="BtnQuitar_Click"/>
+                </Grid>
+
+                <Grid x:Name="PanelCantidad" Grid.Row="5" Margin="4,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="105"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="24"/>
+                        <ColumnDefinition Width="65"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Precio costo" Style="{StaticResource FieldLabel}"
+                               VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" x:Name="TxtPrecio" IsReadOnly="True"/>
+                    <TextBlock Grid.Column="3" Text="Cantidad" Style="{StaticResource FieldLabel}"
+                               VerticalAlignment="Center"/>
+                    <Border Grid.Column="4" BorderBrush="#E0D0C0" BorderThickness="1.5"
+                            CornerRadius="8" Background="White" Height="38">
+                        <wfi:WindowsFormsHost Margin="2">
+                            <wf:NumericUpDown x:Name="NudCantidad"
+                                               Minimum="1" Maximum="100" Value="1"
+                                               BorderStyle="None"/>
+                        </wfi:WindowsFormsHost>
+                    </Border>
+                    <Button Grid.Column="5" Style="{StaticResource SecondaryButton}"
+                            Content="MODIFICAR CANTIDAD"
+                            HorizontalAlignment="Right"
+                            Height="38"
+                            MinWidth="190"
+                            Padding="18,0"
+                            FontSize="11"
+                            Click="BtnModificarCantidad_Click"/>
+                </Grid>
+
+                <Grid x:Name="PanelDetalle" Grid.Row="6" Margin="0,12,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Productos agregados" Style="{StaticResource FieldLabel}"
+                               Margin="4,0,0,7"/>
+                    <Border Grid.Row="1" Background="White"
+                            BorderBrush="#E0D0C0" BorderThickness="1.5"
+                            CornerRadius="8" Padding="1">
+                        <DataGrid x:Name="DgDetalle"
+                                  SelectionChanged="DgDetalle_SelectionChanged"
+                                  CellEditEnding="DgDetalle_CellEditEnding"/>
+                    </Border>
+                </Grid>
+
+                <UniformGrid x:Name="PanelTotales" Grid.Row="7" Rows="1" Columns="3" Margin="4,16,4,18">
+                    <Border Background="#F5F0EB" CornerRadius="8"
+                            Padding="14,10" Margin="0,0,16,0">
+                        <DockPanel>
+                            <TextBlock Text="Subtotal" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="TxtSubtotal" Text="L 0.00"
+                                       FontFamily="Poppins" FontSize="12"
+                                       FontWeight="SemiBold" Foreground="#3D2B1F"
+                                       HorizontalAlignment="Right"/>
+                        </DockPanel>
+                    </Border>
+                    <Border Background="#F5F0EB" CornerRadius="8"
+                            Padding="14,10" Margin="8,0">
+                        <DockPanel>
+                            <TextBlock Text="Impuesto" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="TxtImpuesto" Text="L 0.00"
+                                       FontFamily="Poppins" FontSize="12"
+                                       FontWeight="SemiBold" Foreground="#3D2B1F"
+                                       HorizontalAlignment="Right"/>
+                        </DockPanel>
+                    </Border>
+                    <Border Background="#FDE8C8" CornerRadius="8"
+                            Padding="14,10" Margin="16,0,0,0">
+                        <DockPanel>
+                            <TextBlock Text="Total" Style="{StaticResource FieldLabel}"/>
+                            <TextBlock x:Name="TxtTotal" Text="L 0.00"
+                                       FontFamily="Poppins" FontSize="12"
+                                       FontWeight="SemiBold" Foreground="#3D2B1F"
+                                       HorizontalAlignment="Right"/>
+                        </DockPanel>
+                    </Border>
+                </UniformGrid>
+
+                <StackPanel x:Name="PanelAcciones" Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource SecondaryButton}"
+                            Content="Limpiar" Margin="0,0,10,0"
+                            Click="BtnLimpiar_Click"/>
+                    <Button Content="ACTUALIZAR Y ENVIAR"
+                            Click="BtnActualizar_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
