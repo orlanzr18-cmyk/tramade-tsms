@@ -11,17 +11,16 @@ namespace TRAMADE
 {
     internal class clsConexion
     {
-        /*string conexion = "Data Source=db-tramade.database.windows.net;" +
-                          "Initial Catalog=DB_TRAMADE;" +
-                          "User ID=TMSS;" +
-                          "Password=Elmaster8;" +
-                          "Connect Timeout=30;";*/
 
-        string conexion = "Data Source=DB_TRAMADE.mssql.somee.com;" +
-                          "Initial Catalog=DB_TRAMADE;" +
-                          "User ID=TRAMADE;" +
-                          "Password=Elmaster8;" +
-                          "Connect Timeout=30;";
+        string conexion = "Data Source=ORLAN\\ORLANSERVER;" +
+                  "Initial Catalog=DB_TRAMADE;" +
+                  "Integrated Security=True;" +
+                  "Persist Security Info=False;" +
+                  "Pooling=False;" +
+                  "MultipleActiveResultSets=False;" +
+                  "Encrypt=True;" +
+                  "TrustServerCertificate=True;" +
+                  "Application Name=\"SQL Server Management Studio\";";
 
         public SqlConnection SqlC = new SqlConnection();
         public clsConexion()
