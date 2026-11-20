@@ -1,0 +1,3 @@
+-- Usuario de prueba
+Correo:     prueba@correo.com
+Contraseña: 123456
